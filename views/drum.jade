@@ -4,22 +4,29 @@ block content
   .container
     h1 Drum Machine
     .row
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="snare") Snare
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="hhat_closed") hhat_closed
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="hhat_open") hhat_open
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="crash") crash
+        .span1
+            a(id="start-tick", class="btn btn-info")
+                i(class="icon-play") 
+        .span1
+            a(id="stop-tick", class="btn btn-info")
+                i(class="icon-stop")
+
     .row
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="kick") kick
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="stick") stick
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="tom_1") tom_1
-        .span3
+        .span2
             button(class="drum btn btn-xlarge", data-sound="tom_2") tom_2
 
 
