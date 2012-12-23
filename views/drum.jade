@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .container
+    h1 Drum Machine
+    .row
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="snare") Snare
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="hhat_closed") hhat_closed
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="hhat_open") hhat_open
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="crash") crash
+    .row
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="kick") kick
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="stick") stick
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="tom_1") tom_1
+        .span3
+            button(class="drum btn btn-xlarge", data-sound="tom_2") tom_2
+
+
+block scripts
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/drum.js')
+
