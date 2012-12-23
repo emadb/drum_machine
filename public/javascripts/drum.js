@@ -20,8 +20,8 @@ $(function(){
     }
 
     var tick = function (){
-       gainTick.gain.value = 1;
-       setTimeout(function(){gainTick.gain.value = 0}, 30);
+       gainTick.gain.value = 0.8;
+       setTimeout(function(){gainTick.gain.value = 0}, 15);
     };
     
     socket.on('played', function (data) {
@@ -41,13 +41,13 @@ $(function(){
         gainTick.gain.value = 0;
 
         oscillator.type = 1; 
-        oscillator.frequency.value = 1000;
+        oscillator.frequency.value = 900;
         filter.type = 6;
         filter.frequency.value = 880;
 
         oscillator.noteOn(0);
 
-        tickInterval = setInterval(tick, 1000);
+        tickInterval = setInterval(tick, 600);
     });
 
     $(document).on('click', '#stop-tick', function(){
