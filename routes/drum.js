@@ -17,6 +17,7 @@ exports.init = function(io){
         if (tickTimer === null){
             tickTimer = setInterval(function() { socket.broadcast.emit('tick'); }, 60000/bpm);
         }
+        
         socket.on('disconnect', function (data) {
             user = _.find(users, function(u){ return u.id === socket.id});
             var index = users.indexOf(user);
