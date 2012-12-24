@@ -28,8 +28,20 @@ block content
             button(class="drum btn btn-xlarge", data-sound="tom_1") tom_1
         .span2
             button(class="drum btn btn-xlarge", data-sound="tom_2") tom_2
+        .span2
+            .well
+                h3 Drummers
+                ul#users
 
-
+  #userModal.modal.hide.fade
+    .modal-header
+      button(class="close", data-dismiss="modal", aria-hidden="true") &times;
+      h3 Insert your name
+    .modal-body
+      input(type="text", id="user-name")
+    .modal-footer
+      a(href="#", class="btn btn-primary", id="join-drum") Apply
+    
 block scripts
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/drum.js')

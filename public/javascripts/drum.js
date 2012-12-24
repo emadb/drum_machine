@@ -1,7 +1,28 @@
 $(function(){
     var context = new webkitAudioContext()
-    var socket = io.connect('http://localhost:3000');
-    var tickInterval, gainTick;
+    var socket = io.connect(location.origin);
+    var tickInterval, gainTick; 
+    var tickIsEnabled = false;
+
+    var setupTickOscillator = function(){
+
+        oscillator = context.createOscillator();
+        var filter = context.createBiquadFilter();
+        gainTick = context.createGainNode();
+
+        oscillator.connect(filter);
+        filter.connect(gainTick);
+        gainTick.connect(context.destination);
+        
+        gainTick.gain.value = 0;
+
+        oscillator.type = 1; 
+        oscillator.frequency.value = 900;
+        filter.type = 6;
+        filter.frequency.value = 880;
+
+        oscillator.noteOn(0);
+    }
 
     var playSound = function (sound){
         var request = new XMLHttpRequest();
@@ -20,38 +41,34 @@ $(function(){
     }
 
     var tick = function (){
-       gainTick.gain.value = 0.8;
-       setTimeout(function(){gainTick.gain.value = 0}, 15);
+        if (tickIsEnabled){
+            gainTick.gain.value = 0.8;
+            setTimeout(function(){gainTick.gain.value = 0}, 15);
+        }
     };
     
     socket.on('played', function (data) {
         playSound(data.sound);
     });
 
+    socket.on('tick', function(data){
+        tick();
+    });
+
+    socket.on('joined', function(data){
+        var userList = $("#users")
+        userList.html('');
+        $(data).each(function(i, item){
+            userList.append('<li>' + item.userName + '</li>');
+        });
+    });
+
     $(document).on('click', '#start-tick', function(){
-
-        oscillator = context.createOscillator();
-        var filter = context.createBiquadFilter();
-        gainTick = context.createGainNode();
-
-        oscillator.connect(filter);
-        filter.connect(gainTick);
-        gainTick.connect(context.destination);
-        
-        gainTick.gain.value = 0;
-
-        oscillator.type = 1; 
-        oscillator.frequency.value = 900;
-        filter.type = 6;
-        filter.frequency.value = 880;
-
-        oscillator.noteOn(0);
-
-        tickInterval = setInterval(tick, 600);
+        tickIsEnabled = true;
     });
 
     $(document).on('click', '#stop-tick', function(){
-        clearInterval(tickInterval);
+        tickIsEnabled = false;
     });
 
     $(document).on('click', '.drum', function(){
@@ -60,8 +77,13 @@ $(function(){
         socket.emit('play', { sound: sound });
     });
 
-    
-    
+    $(document).on('click', '#join-drum', function(){
+        socket.emit('join', { userName: $('#user-name').val() });
+        $('#userModal').modal('hide')
+    });
+
+    setupTickOscillator();
+    $('#userModal').modal({keyboard: false});
     
     
 })
