@@ -3,6 +3,7 @@ $(function(){
     var socket = io.connect(location.origin);
     var tickInterval, gainTick; 
     var tickIsEnabled = false;
+    var sounds = [];
 
     var setupTickOscillator = function(){
 
@@ -24,20 +25,29 @@ $(function(){
         oscillator.noteOn(0);
     }
 
-    var playSound = function (sound){
-        var request = new XMLHttpRequest();
-        request.open("GET", '/sounds/' + sound + '.wav', true);
-        request.responseType = "arraybuffer";
-         
-        request.onload = function() {
-            var audioData = request.response;
-            soundSource = context.createBufferSource();
-            soundBuffer = context.createBuffer(audioData, true);
-            soundSource.buffer = soundBuffer;
-            soundSource.connect(context.destination);
-            soundSource.noteOn(context.currentTime);
-        };
-        request.send();    
+    var loadAndPlay = function (sound){
+        if (sounds[sound] === undefined){
+            var request = new XMLHttpRequest();
+            request.open("GET", '/sounds/' + sound + '.wav', true);
+            request.responseType = "arraybuffer";
+             
+            request.onload = function() {
+                sounds[sound] = request.response;
+                play(sound);
+            };
+            request.send();    
+        }
+        else{
+            play(sound);
+        }
+    }
+
+    var play = function(sound){
+        soundSource = context.createBufferSource();
+        soundBuffer = context.createBuffer(sounds[sound], true);
+        soundSource.buffer = soundBuffer;
+        soundSource.connect(context.destination);
+        soundSource.noteOn(context.currentTime);
     }
 
     var tick = function (){
@@ -48,7 +58,7 @@ $(function(){
     };
     
     socket.on('played', function (data) {
-        playSound(data.sound);
+        loadAndPlay(data.sound);
     });
 
     socket.on('tick', function(data){
@@ -73,7 +83,7 @@ $(function(){
 
     $(document).on('click', '.drum', function(){
         var sound = $(this).data('sound');
-        playSound(sound);
+        loadAndPlay(sound);
         socket.emit('play', { sound: sound });
     });
 
